@@ -1,6 +1,8 @@
 const grid = document.querySelector('.grid');
 const blockWidth = 100;
 const blockHeight = 20;
+const boardWidth = 560;
+const boardHeight = 300;
 
 const userStart = [230, 10];
 let currentUserPosition = userStart;
@@ -88,6 +90,8 @@ document.addEventListener('keydown', moveUser);
 
 //create a ball
 const ball = document.createElement('div');
+let xDirection = -1;
+let yDirection = 1;
 ball.classList.add('ball');
 drawBall();
 grid.appendChild(ball);
@@ -100,8 +104,32 @@ function drawBall() {
 
 //move a ball
 function moveBall() {
-    currentBallPosition[0] += 1;
-    currentBallPosition[1] += 1;
+    currentBallPosition[0] += xDirection;
+    currentBallPosition[1] += yDirection;
     drawBall();
+    checkForCollisions();
 }
-// setInterval(moveBall, 15);
+const moveBallInterval = setInterval(moveBall, 15);
+
+//check for collisions
+function checkForCollisions () {
+    console.log(currentBallPosition[0]);
+    if( currentBallPosition[0] >= boardWidth - 20 || currentBallPosition[1] >= boardHeight - 20 || currentBallPosition[0] <= 0) {
+        changeBallDirection();
+    } else if (currentBallPosition[1] <= 0) {
+        console.log('game over');
+        clearInterval(moveBallInterval);
+    }
+}
+//change direction of the ball
+function changeBallDirection() {
+    if(xDirection === 1 && yDirection === 1) {
+        yDirection = -1;
+    } else if (xDirection === 1 && yDirection === -1) {
+        xDirection = -1;
+    } else if(xDirection === -1 && yDirection === 1) {
+        xDirection = 1
+    } else if(xDirection === -1 && yDirection === -1) {
+        xDirection = 1
+    }
+}
